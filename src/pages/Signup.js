@@ -14,15 +14,18 @@ export const Signup = () => {
   const [password, setPassword] = useState("");
   const [icon, setIcon] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [cookies, setCookie] = useCookies();
+  const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
-  const handleIconChange = (e) => setIcon(e.target.value);
   const url = "https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com";
-  const onSignup = () => {
-    console.log(url);
 
+  const handleIconChange = (e) => {
+    setIcon(e.target.files);
+    console.log(e.target.files[0]);
+  };
+
+  const onSignup = () => {
     const data = {
       name: name,
       email: email,
@@ -36,24 +39,29 @@ export const Signup = () => {
         dispatch(signIn());
         setCookie("token", token);
 
-        new Compressor(icon, {
-          quality: 0.4,
+        const file = icon[0];
+        console.log(file);
+        new Compressor(file, {
+          quality: 0.6,
           success(result) {
             const formData = new FormData();
-            formData.append("icon", result, result.name);
-            console.log(formData.get("icon"));
+            console.log(result);
+            formData.append("file", result);
+            console.log(formData);
+
             axios
               .post(`${url}/uploads`, formData, {
                 headers: {
-                  Authorization: `Bearer ${cookies.token}`,
+                  "Content-Type": "multipart/form-data",
+                  Authorization: `Bearer ${token}`,
                 },
               })
               .then(() => {
                 navigate("/");
+              })
+              .catch((err) => {
+                setErrorMessage(`画像アップロードに失敗しました. ${err}`);
               });
-          },
-          error(err) {
-            console.log(err.message);
           },
         });
       })
@@ -66,7 +74,7 @@ export const Signup = () => {
       <main className="signup">
         <h2>新規アカウント作成</h2>
         <p className="error-message">{errorMessage}</p>
-        <form className="signup-form">
+        <form className="signup-form" enctype="multipart/form-data">
           <label for="user">ユーザー名</label>
           <br />
           <input
