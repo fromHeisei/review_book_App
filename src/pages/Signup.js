@@ -44,13 +44,12 @@ export const Signup = () => {
         new Compressor(file, {
           quality: 0.6,
           success(result) {
-            const formData = new FormData();
+            const file = new FormData();
             console.log(result);
-            formData.append("file", result);
-            console.log(formData);
+            file.append("icon", result);
 
             axios
-              .post(`${url}/uploads`, formData, {
+              .post(`${url}/uploads`, file, {
                 headers: {
                   "Content-Type": "multipart/form-data",
                   Authorization: `Bearer ${token}`,

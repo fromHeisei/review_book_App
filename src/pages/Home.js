@@ -29,7 +29,9 @@ export const Home = () => {
       <div>{errorMessage}</div>
       <h1>ユーザプロフィール</h1>
       <h2>ユーザ名：{userName}</h2>
-      <h2>ユーザアイコン：{userIcon}</h2>
+      <p>
+        <img src={userIcon} alt="ユーザアイコン" />
+      </p>
     </div>
   );
 };
