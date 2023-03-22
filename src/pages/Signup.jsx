@@ -3,7 +3,7 @@ import Compressor from "compressorjs";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { signIn } from "../authSlice";
 
 export const Signup = () => {
@@ -111,6 +111,7 @@ export const Signup = () => {
           <button type="button" onClick={onSignup} className="signup-button">
             作成する
           </button>
+          <Link to="/signin">サインイン画面へ</Link>
         </form>
       </main>
     </div>

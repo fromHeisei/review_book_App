@@ -1,14 +1,26 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "../authSlice";
+import "./Home.css";
 
 export const Home = () => {
+  const auth = useSelector((state) => state.auth.isSignIn);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [userIcon, setUserIcon] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [cookies] = useCookies();
+  const [cookies, removeCookie] = useCookies();
   const url = "https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com";
 
+  const handleSignOut = () => {
+    dispatch(signOut());
+    removeCookie("token");
+    navigate("/signin");
+  };
   useEffect(() => {
     axios
       .get(`${url}/users`, {
@@ -32,6 +44,13 @@ export const Home = () => {
       <p>
         <img src={userIcon} alt="ユーザアイコン" />
       </p>
+      {auth ? (
+        <button onClick={handleSignOut} className="sign-out-button">
+          サインアウト
+        </button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
